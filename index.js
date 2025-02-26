@@ -8,20 +8,39 @@ const MyModel = require('./userSchema')
 
 require('./db')
 
-const main = async (req, res) => {
-
-    const data = new MyModel({ name: "Jeet", email: "jeet@gmail.com", password: "Jeet@123", mobile: 9123456789 })
-
-    const results = await data.save();
-    console.log(results);
-
-}
-
-
 app.post("/insertData", async (req, res) => {
-    const data = await main();
+
+    const { name, email, password, mobile } = req.body
+
+    const data = await MyModel.create({
+        name: name,
+        email: email,
+        password: password,
+        mobile: mobile
+    })
+    console.log(data);
 
     res.send(data)
+})
+
+app.post('/login', async (req, res) => {
+
+    const { email, password } = req.body
+
+    const userLogin = await MyModel.findOne({ email: email })
+
+    console.log(userLogin);
+
+    if (!userLogin) {
+        res.send("Wrong User")
+    }
+
+    if (userLogin.password == password) {
+        res.send("User Login...!")
+    } else {
+        res.send("Wrong Password...!")
+    }
+
 })
 
 app.listen(8080);
