@@ -1,4 +1,5 @@
 const express = require('express');
+const bcrypt = require('bcrypt');
 
 const app = express();
 
@@ -12,10 +13,14 @@ app.post("/insertData", async (req, res) => {
 
     const { name, email, password, mobile } = req.body
 
+    const hashPassword = await bcrypt.hash(password, 10)
+
+    console.log(hashPassword);
+
     const data = await MyModel.create({
         name: name,
         email: email,
-        password: password,
+        password: hashPassword,
         mobile: mobile
     })
     console.log(data);
@@ -25,20 +30,25 @@ app.post("/insertData", async (req, res) => {
 
 app.post('/login', async (req, res) => {
 
-    const { email, password } = req.body
+    try {
 
-    const userLogin = await MyModel.findOne({ email: email })
+        const { email, password } = req.body
 
-    console.log(userLogin);
+        const userLogin = await MyModel.findOne({ email: email })
 
-    if (!userLogin) {
-        res.send("Wrong User")
-    }
+        const comperPassword = await bcrypt.compare(password, userLogin.password)
 
-    if (userLogin.password == password) {
-        res.send("User Login...!")
-    } else {
-        res.send("Wrong Password...!")
+        if (!userLogin) {
+            res.send("Wrong User")
+        } else {
+            if (comperPassword) {
+                res.send("User Login...!")
+            } else {
+                res.send("Wrong Password...!")
+            }
+        }
+    } catch (error) {
+        res.send("Internal Server Error...!")
     }
 
 })
