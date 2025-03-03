@@ -7,6 +7,6 @@ const userSchema = mongoose.Schema({
     mobile: Number
 })
 
-const MyModel = mongoose.model('xyz', userSchema);
+const MyModel = mongoose.model('User', userSchema);
 
 module.exports = MyModel
