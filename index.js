@@ -12,4 +12,6 @@ app.post("/insertData", user.insertData)
 
 app.post('/login', userToken, user.login)
 
+app.post('/sendOTP', user.sendOTP);
+
 app.listen(8080);
