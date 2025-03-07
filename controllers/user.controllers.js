@@ -5,21 +5,26 @@ const privateKey = "@J!E#E$T%123&"
 
 const insertData = async (req, res) => {
 
-    const { name, email, password, mobile } = req.body;
+    try {
+        const { name, email, password, mobile } = req.body;
 
-    const hashPassword = await bcrypt.hash(password, 10);
+        const hashPassword = await bcrypt.hash(password, 10);
 
-    console.log(hashPassword);
+        console.log(hashPassword);
 
-    const data = await MyModel.create({
-        name: name,
-        email: email,
-        password: hashPassword,
-        mobile: mobile
-    })
-    console.log(data);
+        const data = await MyModel.create({
+            name: name,
+            email: email,
+            password: hashPassword,
+            mobile: mobile
+        })
+        console.log(data);
 
-    res.send(data);
+        res.send(data);
+    } catch (error) {
+        res.status(500).send("Internal Server Error...!");
+    }
+
 }
 
 const login = async (req, res) => {
@@ -44,13 +49,13 @@ const login = async (req, res) => {
 
                 // console.log("--->", token);
 
-                res.send("User Login...!");
+                res.status(201).send({ msg: "User Login...!", userLogin: userLogin, token: token });
             } else {
                 res.send("Wrong Password...!");
             }
         }
     } catch (error) {
-        res.send("Internal Server Error...!");
+        res.status(500).send("Internal Server Error...!");
     }
 
 }
