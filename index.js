@@ -10,8 +10,12 @@ require('./Database/db');
 
 app.post("/insertData", user.insertData)
 
-app.post('/login', userToken, user.login)
+app.post('/login', user.login)
 
 app.post('/sendOTP', user.sendOTP);
+
+app.post('/submitOTP', user.submitOTP);
+
+app.post('/newUpdatePassword', user.newPassword);
 
 app.listen(8080);
